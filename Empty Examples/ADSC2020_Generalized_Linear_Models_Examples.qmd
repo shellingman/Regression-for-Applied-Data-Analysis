@@ -1,0 +1,59 @@
+---
+title: "ADSC2020 Generalized Linear Models Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+```{r}
+
+library(GLMsData)
+# data(dental)
+dental <- read.csv("dental.csv")
+
+hist(dental$DMFT)
+
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+set.seed(2020)
+
+library(statmod)
+
+# Binomial #
+
+
+# Poisson #
+
+
+# Normal #
+
+
+# Gamma #
+
+
+# Inverse Gaussian #
+# rinvgauss(
+
+# Negative Binomial #
+# rnbinom(
+```
+
+## Example 3 from slides
+
+```{r}
+
+# GLModel <- glm(response ~ Var.1 + Var.2 + ... + Var.j,
+# family = distribution.name(link = "default.link"), data = data)
+# 
+# summary(GLModel)
+# 
+# 
+# plot(GLModel)
+```

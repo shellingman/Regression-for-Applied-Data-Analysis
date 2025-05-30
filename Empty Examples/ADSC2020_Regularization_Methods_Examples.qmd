@@ -1,0 +1,116 @@
+---
+title: "ADSC2020 Regularization Methods for Model Selection Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## 
+
+```{r}
+
+if(!require(glmnet)) install.packages("glmnet")
+library(glmnet)
+
+
+```
+
+## Example 1 from slides
+
+```{r}
+
+data(mtcars)
+
+
+
+
+
+
+
+
+
+
+# ####Min-Max Scaling (0-1) Function####
+# 
+# norm_minmax <- function(x){
+#   (x- min(x)) /(max(x)-min(x))
+# }
+# ####Define Model####
+# 
+# #Response Variable
+# y <- mtcars$hp #horse power
+# 
+# #Predictors
+# x <- data.matrix(mtcars[,c('mpg', 'wt', 'drat', 'qsec')]) #Miles/Gallon #Weight (1000lbs) #Rear axle Ratio #1/4 mile time  
+# 
+# 
+# #Scaled#
+# y <- norm_minmax(y)
+# x <- apply(x, MARGIN = 2, FUN = norm_minmax)
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+
+## Ridge ##
+
+
+
+
+
+## LASSO ##
+
+
+# ##OLS Model
+# lm <- lm(y~x)
+# coef(lm)
+# 
+# ##Small lambda
+# #alpha = 1 for LASSO
+# m1 <- glmnet(x,y,alpha=1,lambda = )
+# coef(m1)
+
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+
+
+# cv1 <- cv.glmnet(x, y, nfolds = 10, alpha = )
+# best lambda <- cv1$lambda.min
+# best lambda
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+
+
+
+
+
+
+
+# #Plot the progress of MSE by lambda value#
+# plot(cv1)
+# 
+# #Plot the coef. progress
+# fit <- glmnet(x,y)
+# plot(fit)
+# 
+# fit1 <- glmnet(x,y,alpha = 0)
+# plot(fit1)
+# 
+# 
+# m3 <- glmnet(x,y,alpha=1,lambda = best_lambda)
+# coef(m3) #drat set to zero
+
+```

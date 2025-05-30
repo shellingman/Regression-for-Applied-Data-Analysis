@@ -1,0 +1,90 @@
+---
+title: "ADSC2020 Introduction to Time Series Modelling Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+```{r, warning=FALSE}
+
+
+# library(TSA)
+# data("tempdub",package = "TSA")
+# 
+# plot(,type='o')
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+# set.seed()
+
+# WN.SN <- 
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+
+# n=
+# x <- numeric(n)
+# for(i in 2:n){
+#   x[i] <- x[i - 1] + WN.SN[i-1]
+# }
+
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+set.seed(2020)
+
+MA1 <- arima.sim(n = 100, list(order = c(0,0,1), ma = 0.3))
+plot(MA1 + 3,type = 'o', main = "Moving Average Process", ylab = "MA(1)")
+
+```
+
+## Example 5 from slides
+
+```{r}
+
+set.seed(2020)
+
+AR2 <- arima.sim(n = 100, list(order = c(2,0,0), ar = c(0.3,-0.5)))
+plot(AR2 + 3,type = 'o', main = "Autoregressive Process", ylab = "AR(2)")
+
+
+
+```
+
+## Example 6 from slides
+
+```{r}
+
+# data("AirPassengers")
+# 
+# plot(,type = "o")
+
+```
+
+### Autoplot
+
+```{r,message=FALSE}
+
+library(zoo)
+library(ggplot2)
+library(scales)
+
+autoplot(as.zoo(AR2))+ ggtitle("AR(2) time series") + 
+  xlab("Time") + ylab("AR(2)")
+
+
+```

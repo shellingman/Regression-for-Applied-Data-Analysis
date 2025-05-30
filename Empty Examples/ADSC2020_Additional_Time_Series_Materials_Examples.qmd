@@ -1,0 +1,96 @@
+---
+title: "ADSC2020 Additional Time Series Materials Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+```{r}
+library(forecast)
+library(lmtest)
+
+Bags <- read.csv("BagComplaints.csv")
+
+## 1 ##
+
+# BTrain <- Bags[1:78,]
+# BTest <- Bags[79:84,]
+# 
+# Xtrain <- cbind(BTrain$Scheduled, BTrain$Cancelled, BTrain$Enplaned)
+# colnames(Xtrain) = c("Scheduled","Cancelled","Enplaned")
+# 
+# 
+# Xtest <- cbind(BTest$Scheduled,BTest$Cancelled,BTest$Enplaned)
+# colnames(Xtest) = c("Scheduled","Cancelled","Enplaned")
+# 
+# 
+# ComplaintsTrain <- ts(BTrain$Baggage, frequency = 12, start = c(2004, 1))
+# ComplaintsTest <- ts(BTest$Baggage, frequency = 12, start = c(2010,7))
+# 
+# 
+# # auto.model <- auto.arima(ComplaintsTrain,xreg = Xtrain)
+# # coeftest(auto.model)
+
+
+## 2 ##
+
+
+
+
+## 3 ##
+
+
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+# forecast1 <- forecast(model,h,xreg = Xtest)
+# accuracy(forecast1, TestData)
+
+
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+# ## 1 ##
+# 
+# nn1 <- nnetar(ts,p,P,size=k,xreg = matrix)
+# 
+# ## 2 ##
+# forecast3 <- forecast(model,h,xreg = Xtest)
+# accuracy(forecast3, TestData)
+
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+# fore2 <- forecast(nn1,h=6)
+# 
+# fore3 <- (fore1$mean + fore2$mean)/2
+# 
+# accuracy(fore3,ComplaintsTest)
+
+```
+
+## Example 5 from slides
+
+```{r}
+
+# autoplot(ComplaintsTrain)+
+#   autolayer(ComplaintsTest,series = "Test")+
+#   autolayer(fore1$mean,series = "ARIMA")+
+#   autolayer(fore2$mean,series = "NNAR")+
+#   autolayer(fore3,series = "Combination")
+
+```

@@ -1,0 +1,88 @@
+---
+title: "ADSC2020 Model Selection Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+```{r}
+
+House <- read.csv("Housing.csv")
+
+
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+set.seed(2020)
+
+House$X1 <- rnorm(nrow(House),1,1)
+House$X2 <- runif(nrow(House),0,10)
+
+
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+
+```
+
+## Example 5 from slides
+
+```{r}
+
+
+
+```
+
+## Example 6 from slides
+
+```{r}
+
+
+
+
+```
+
+## Example 7 from slides
+
+```{r}
+
+
+
+```
+
+## Example 8 from slides
+
+```{r}
+
+
+ggplot(data = House, mapping = aes(y = price, x = bedrooms))+
+         geom_point() +
+         geom_smooth(method = "lm")+
+  labs(title = "House Price by Number of Bedrooms")
+
+
+ggplot(data = House, mapping = aes(y = price, x = stories))+
+         geom_point() +
+         geom_smooth(method = "lm")+
+  labs(title = "House Price by Number of Stories")
+
+
+```

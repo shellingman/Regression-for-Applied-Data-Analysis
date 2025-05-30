@@ -1,0 +1,447 @@
+---
+title: "ADSC2020_Predictions_Examples"
+format: pdf
+editor: visual
+---
+
+# Predictions I
+
+## Example 1 from slides
+
+#### Simple Data:
+
+```{r}
+
+set.seed(2020)
+
+X1 <- rnorm(123,10,1)
+Y <- round(1.5*X1 + rnorm(123,0,2),digits = 2)
+
+df1 <- data.frame(Y = Y, X1 = X1)
+
+```
+
+#### Model and prediction:
+
+```{r}
+
+
+library(ggplot2)
+
+
+ggplot()+
+         geom_point(data = df1, mapping = aes(y = Y, x = X1)) +
+         geom_smooth(data = df1, mapping = aes(y = Y, x = X1),
+                     method = "lm",se=FALSE)+
+          labs(title = "Scatterplot of Data")
+
+
+
+
+# To predict #
+
+NewData <- data.frame(X1 = rnorm(20,10,1))
+
+#prediction <- data.frame(Prediction = ), X1 = )
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+
+
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+set.seed(2020)
+library(dplyr)
+
+Football <- read.csv("Football22.csv")
+
+Football_strat_sample <- Football %>%
+                  group_by(League) %>% #The stratum
+                  sample_frac(size=.75) # 75% of each group
+
+
+# Football_Test <- anti_join(Football, Football_strat_sample, by = "Team")
+
+
+```
+
+# Predictions II
+
+```{r}
+
+library(DescTools)
+library(Metrics)
+
+predicted <- c(5,3,7,6,4)
+actual <- c(4,4,8,6,9)
+MAE(predicted,actual)
+MSE(predicted,actual)
+RMSE(predicted,actual)
+rae(actual,predicted)
+
+
+# RelativeAbsError <- function(realized, predicted, na.rm = TRUE){
+#   abs_error <- abs(realized - predicted)
+#   mean_realized <- mean(realized, na.rm = na.rm)
+#   sum(abs_error, na.rm = na.rm) / sum(abs(realized - mean_realized), na.rm = na.rm)
+# }
+
+```
+
+## Illustrative Example 1 from slides
+
+Training:\
+Testing:
+
+## Example 1 from slides
+
+```{r}
+
+
+
+
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+
+
+
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+
+
+```
+
+## K-Fold Cross-Validation in R Example
+
+```{r}
+
+library(DescTools)
+library(Metrics)
+library(dplyr)
+
+set.seed(2020)
+
+K <- 10
+
+#shuffle
+df1A<-df1[sample(nrow(df1)),] 
+#Create K equally size folds
+folds <- cut(seq(1,nrow(df1A)),breaks=K,labels=FALSE)
+
+Prediction.Capability <- data.frame(matrix(ncol = 5, nrow = 0 )) #Dataframe for results
+
+x <- c("Fold_Number", "MAE","MSE","RMAE","RAE") # column names
+colnames(Prediction.Capability) <- x
+rm(x)
+Prediction.Model <- Prediction.Capability
+
+#Perform K fold cross validation
+for(i in 1:K){
+  #Segement your data by fold using the which() function 
+  testIndexes <- which(folds==i,arr.ind=TRUE)
+  testData <- df1A[testIndexes, ]
+  trainData <- na.omit(df1A[-testIndexes, ])
+  
+  lmdf1A <- lm(Y~X1,data = trainData)
+  
+  # Make predictions and measure the accuracy #
+  
+  predictions <- lmdf1A %>%
+    predict(testData) %>% 
+    as.data.frame()
+  
+  # Accuracy #
+  names(predictions)[1] <- 'Predicted'
+  MAE <- MAE(predictions$Predicted, testData$Y)
+  MSE <- MSE(predictions$Predicted, testData$Y)
+  RMAE <- RMSE(predictions$Predicted, testData$Y)
+  RAE <- rae(testData$Y, predictions$Predicted)
+
+  
+  # Save the results #
+  Prediction.Model[1,] <- c(i,MAE,MSE,RMAE,RAE)
+  
+  Prediction.Capability <- rbind(Prediction.Capability,Prediction.Model)
+  
+}
+
+Prediction.Capability %>% 
+  dplyr::select(-c(Fold_Number)) %>% # Average Results
+  colMeans()
+
+```
+
+## Example 5 from slides
+
+```{r}
+
+set.seed(2020)
+
+Football <- read.csv("Football22.csv")
+
+```
+
+
+## Example 6 from slides
+
+```{r}
+
+library(dplyr)
+set.seed(2020)
+
+X1 <- round(rnorm(140,0,10))
+Y <- X1^2 + rnorm(140,0,30)
+
+df2 <- data.frame(id = 1:length(Y), Y = Y, X1 = X1)
+
+
+#use 70% of dataset as training set and 30% as test set 
+train <- df2 %>% dplyr::sample_frac(0.70)
+test  <- dplyr::anti_join(df2, train, by = 'id')
+
+
+
+
+# Predictions <- data.frame(Y = test$Y, X1 = test$X1, Pred = predict(lm6,test))
+
+
+
+
+# ggplot()+
+#          geom_point(data = df2, mapping = aes(y = Y, x = X1)) +
+#           geom_point(data = Predictions, mapping = aes(y = Pred, x = X1), color = "red") +
+#          geom_smooth(data = train, mapping = aes(y = Y, x = X1),
+#                      method = "lm",se=FALSE)+
+#           labs(title = "Scatterplot of Data with Predictions")
+
+
+```
+
+## Example 7 from slides
+
+```{r}
+
+library(dplyr)
+
+set.seed(2020)
+
+X1 <- rnorm(123,10,1)
+Y <- round(1.5*X1 + rnorm(123,0,2),digits = 2)
+
+df1 <- data.frame(Y = Y, X1 = X1)
+
+
+set.seed(20)
+
+df1$X1 <- round(X1,digits = 1)
+df1$id <- 1:nrow(df1)
+
+
+# #use 90% of dataset as training set and 10% as test set 
+# train7 <- df1 %>% dplyr::sample_frac(0.90)
+# test7  <- dplyr::anti_join(df1, train7, by = 'id')
+# 
+# lm7 <- lm(Y~factor(X1), data = train7)
+# summary(lm7)
+# 
+# 
+# Predictions <- data.frame(Y = test7$Y, X1 = test7$X1, Pred = predict(lm7,test7))
+# 
+# train7$Fit <- predict(lm7,train7)
+# 
+# ggplot()+
+#          geom_point(data = df1, mapping = aes(y = Y, x = X1),alpha = 1/10) +
+#           geom_point(data = Predictions, mapping = aes(y = Pred, x = X1), color = "red")+ geom_point(data = train7, mapping = aes(y = Fit, x = X1), color = "blue",alpha = 1/10)+
+#           
+#           labs(title = "Scatterplot of Data with Predictions")
+
+
+
+```
+
+### Overfitting Example
+
+```{r}
+
+set.seed(2020)
+
+X <- rnorm(334,2,1)
+Y <- 0.01*X^5 + rnorm(334,5,5) + 2*X
+
+df3 <- data.frame(Y = Y, X = X, id = 1:length(Y))
+
+#use 70% of dataset as training set and 30% as test set 
+trainOE <- df3 %>% dplyr::sample_frac(0.70)
+testOE  <- dplyr::anti_join(df3, train, by = 'id')
+
+
+
+
+
+ggplot()+
+         geom_point(data = trainOE, mapping = aes(y = Y, x = X)) +
+          geom_smooth(data = trainOE, mapping = aes(y = Y, x = X),
+                     method = "lm",se=FALSE,formula = y ~ x, color = "blue") +
+            geom_smooth(data = trainOE, mapping = aes(y = Y, x = X),
+                     method = "lm",se=FALSE,formula = y ~ poly(x,2), color = "red")+
+          geom_smooth(data = trainOE, mapping = aes(y = Y, x = X),
+                     method = "lm",se=FALSE,formula = y ~ poly(x,3), color = "green")+
+  geom_smooth(data = trainOE, mapping = aes(y = Y, x = X),
+                     method = "lm",se=FALSE,formula = y ~ poly(x,4), color = "brown") +
+    geom_smooth(data = trainOE, mapping = aes(y = Y, x = X),
+                     method = "lm",se=FALSE,formula = y ~ poly(x,5), color = "purple")+
+    geom_smooth(data = trainOE, mapping = aes(y = Y, x = X),
+                     method = "lm",se=FALSE,formula = y ~ poly(x,6), color = "pink")+
+    geom_smooth(data = trainOE, mapping = aes(y = Y, x = X),
+                     method = "lm",se=FALSE,formula = y ~ poly(x,12), color = "orange")+
+  geom_point(data = testOE, mapping = aes(y = Y, x = X),color = "cyan",alpha = 1/3) +
+labs(title = "Scatterplot of Data with Possible Polynomials")
+
+
+
+for(i in 1:20){
+  
+  lmOE <- lm(Y~poly(X,i), data = trainOE)
+  
+  cat("Polynomial:", i, "MAE:", MAE(predict(lmOE,testOE),testOE$Y), "MSE:", MSE(predict(lmOE,testOE),testOE$Y), "\n")
+
+  
+  
+  
+}
+
+
+
+```
+
+## Example 8 from slides
+
+```{r}
+
+# Solution for Example 6 #
+
+library(dplyr)
+set.seed(2020)
+
+X1 <- round(rnorm(140,0,10))
+Y <- X1^2 + rnorm(140,0,30)
+
+df2 <- data.frame(id = 1:length(Y), Y = Y, X1 = X1)
+
+
+#use 70% of dataset as training set and 30% as test set 
+train <- df2 %>% dplyr::sample_frac(0.70)
+test  <- dplyr::anti_join(df2, train, by = 'id')
+
+
+# Model #
+
+
+Predictions <- data.frame(Y = test$Y, X1 = test$X1, Pred = predict(lm6,test))
+
+
+
+
+ggplot()+
+         geom_point(data = df2, mapping = aes(y = Y, x = X1)) +
+          geom_point(data = Predictions, mapping = aes(y = Pred, x = X1), color = "red") +
+          labs(title = "Scatterplot of Data with Predictions")
+
+MAE(test$Y,Predictions$Pred)
+
+
+# Solution for Example 7 #
+
+
+
+
+# MAE(Predictions$Y,Predictions$Pred)
+# MAE(test7$Y, Pred7A)
+
+
+
+
+```
+
+## Example 9 from slides
+
+```{r}
+
+House <- read.csv("Housing.csv")
+
+
+set.seed(2020)
+library(caret)
+
+
+# train.control <- trainControl(method = "cv", number = 10)
+
+
+
+  
+```
+
+```{r}
+
+
+# ## Polynomials ##
+# 
+# intercept.model <- lm(price ~ 1, data = House)
+# full.model <- lm(price ~ .^2 + I(area^2) + I(bedrooms^2) + I(bathrooms^2), data = House)
+# 
+# 
+# # Does not need to be all variables, can be a set under consideration.
+# both <- step(intercept.model, direction="both", scope=formula(full.model), trace=0)
+# # trace = 1 Shows each step
+# both$anova #Shows the results
+# both$coefficients #Shows the estimates
+# 
+# 
+# # BIC #
+# 
+# bothBIC <- step(intercept.model, direction="both", scope=formula(full.model), trace=0, k = log(nrow(House))) 
+# # trace = 1 Shows each step
+# bothBIC$anova #Shows the results
+# 
+# bothBIC$coefficients #Shows the estimates
+# 
+# summary(bothBIC)
+
+
+
+```

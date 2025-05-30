@@ -1,0 +1,105 @@
+---
+title: "ADSC2020 ARIMA Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+```{r, warning=FALSE, message=FALSE}
+
+library(TSA)
+library(tseries)
+
+
+# TrainPassengers <- read.csv("Germany_Rail.csv")
+# Trains <- ts(TrainPassengers$Passengers, frequency = 4, start = c(2004, 1))
+# 
+# plot(data, type = "o")
+# 
+# acf(data)
+# pacf(data)
+# 
+# adf.test(data)
+# kpss.test(data)
+
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+library(lmtest)
+
+
+# acf(diff(ts)) # MA(q)
+# pacf(diff(ts)) # AR(p)
+# 
+# ARMA <- arima(ts,order = c(p,d,q))
+# 
+# coeftest(ARMA)
+```
+
+## Example 3 from slides
+
+```{r}
+
+library(forecast)
+# 
+# model <- auto.arima(ts)
+# summary(model)
+# coeftest(model)
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+
+# acf(diff(diff(ts),lag=s)) # Seasonal MA
+# pacf(diff(diff(data),lag=s)) # Seasonal AR
+
+
+```
+
+## Example 5 from slides
+
+```{r}
+
+# model <- arima(data,order=c(p,d,q),
+# seasonal=list(order=c(P,D,Q), period=s))
+
+
+```
+
+## Example 6 from slides
+
+```{r}
+
+# acf(residuals(model))
+# pacf(residuals(model))
+# 
+# acf(rstandard(model))
+# pacf(rstandard(model))
+# 
+# Box.test(rstandard(model),lag = l, type = "Ljung-Box")
+
+```
+
+## Example 7 from slides
+
+```{r}
+
+library(car)
+
+# shapiro.test(rstandard(model))
+# 
+# qqPlot(rstandard(model), ylab = "Standardized Residuals")
+
+
+```
+
+## 

@@ -1,0 +1,206 @@
+---
+title: "ADSC2020 Logistic Regression Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+survived: no or yes.\
+sex: female or male\
+age: in years (and for some children, fractions of a year); age is missing for 263 of the passengers. passengerClass: 1st, 2nd, or 3rd class.
+
+```{r}
+
+
+library(carData)
+data("TitanicSurvival")
+
+
+TitanicS <- na.omit(TitanicSurvival)
+
+# LogitModel <- glm(binary.response ~ Var.1 + Var.2 + ...
+# + Var.j, family = binomial(link = "logit"), data = data)
+
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+set.seed(2020)
+
+TitanicSurvival$X1 <- rnorm(nrow(TitanicSurvival),2,2)
+#relevel(passengerClass,"2nd")
+
+```
+
+### Linearity I
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+# Model values #
+probabilities <- predict(LogitModel, type = "response")
+
+# Numeric variables #
+mydata <- data %>%
+na.omit() %>%
+dplyr::select_if(is.numeric)
+predictors <- colnames(mydata)
+
+# transformed relationship #
+mydata <- mydata %>%
+mutate(logit = log(probabilities/(1-probabilities))) %>%
+gather(key = "predictors", value = "predictor.value",-logit)
+
+# generate the plots #
+
+ggplot(mydata, aes(logit, predictor.value))+
+geom_point(size = 0.5, alpha = 0.5) +
+geom_smooth(method = "loess") +
+theme_bw() +
+facet_wrap( predictors, scales = "free_y")
+
+```
+
+### Linearity II
+
+```{r}
+
+TitanicSurvival %>%
+  na.omit() %>% 
+mutate(comp_res = coef(LogitModel)["variable.name"]*variable.name +
+  residuals(LogitModel, type = "working")) %>%
+ggplot(aes(x = variable.name, y = comp_res)) +
+geom_point() +
+geom_smooth(color = "red", method = "lm", linetype = 2,
+se = F) +
+geom_smooth(se = F)
+
+
+
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+library(car)
+# vif()
+```
+
+## Example 5 from slides
+
+```{r}
+
+# plot(LogitModel,3)
+# plot(LogitModel,4)
+
+# cooks.distance(LogitModel)
+
+
+
+
+```
+
+## Example 6 from slides
+
+```{r}
+
+# deviance()
+# anova(model.simple, model.complex, test='LR')
+# BIC()
+# anova(lm2,lm1,test='LR')
+
+```
+
+### Stepwise Selection
+
+```{r}
+
+intercept.model <- glm(survived ~ 1, data = na.omit(TitanicSurvival), family = binomial)
+full.model <- glm(survived ~., data = na.omit(TitanicSurvival), family = binomial)
+
+# Does not need to be all variables, can be a set under consideration.
+both <- step(intercept.model, direction="both", scope=formula(full.model), trace=0)
+# trace = 1 Shows each step
+both$anova #Shows the results
+both$coefficients #Shows the estimates
+
+
+# BIC #
+
+bothBIC <- step(intercept.model, direction="both", scope=formula(full.model), trace=0, k = log(nrow(na.omit(TitanicSurvival)))) 
+# trace = 1 Shows each step
+bothBIC$anova #Shows the results
+
+bothBIC$coefficients #Shows the estimates
+
+
+
+
+```
+
+## Example 7 from slides
+
+```{r}
+set.seed(2020)
+
+library(caret)
+
+train_model <- trainControl(method = "cv", number = 10)
+
+# Train the model
+modelT <- train(
+  survived ~., 
+  data = na.omit(TitanicSurvival), 
+  method = "glm",
+  family = "binomial",
+  trControl = train_model)
+print(modelT)
+
+confusionMatrix(predict(modelT), na.omit(TitanicS$survived))
+
+
+```
+
+## Example 8 from slides
+
+```{r}
+
+# ProbitModel <- glm(binary.response ∼ Var.1 + Var.2 + ...
+# + Var.j, family = binomial(link = "probit"), data =
+# data)
+
+
+
+```
+
+```{r}
+
+library(ggeffects)
+
+# margins(ProbitModel, variables = "variable.name")
+
+# ggpredict(lm1,terms = "age[0:100 by = 1]") %>% 
+#   plot()
+
+```

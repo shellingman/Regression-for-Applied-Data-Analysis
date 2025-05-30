@@ -1,0 +1,239 @@
+---
+title: "ADSC2020 Estimation and Assumptions Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Illustrative Example 1
+
+```{r}
+
+library(L1pack)
+
+Football <- read.csv("Football22.csv")
+
+
+# LAD Regression #
+
+#LAD1 <- lad()
+
+# OLS Regression #
+
+```
+
+## Example 1 from slides
+
+In practice, it may be difficult to determine the distribution our data *may* follow.
+
+```{r}
+
+# Install and load the package
+#install.packages("fitdistrplus")
+library(fitdistrplus)
+
+# fit <- fitdist(data, distr = "")
+
+# 1 #
+
+Sample1 <- rnorm(123,2,4)
+
+# 2 #
+
+Sample2 <- rexp(67,40)
+
+# 3 #
+
+Sample3 <- rchisq(145,10)
+
+
+## Cullen and Frey ##
+descdist(Football$Goals_For,boot = 100)
+
+
+# 4 #
+
+hist(Football$Goals_For)
+
+
+# 5 #
+
+hist(Football$Draws)
+```
+
+## Example 2 from slides
+
+-   **type**. Type of occupation. A factor with the following levels: `prof`, professional and managerial; `wc`, white-collar; `bc`, blue-collar.
+
+-   **income**. Percent of people in occupation earning \$3500 or more in 1950.
+
+-   **education**. Percent of people in occupation in 1950 who where high-school graduates.
+
+-   **prestige**. Percent of raters in NORC study rating occupation as excellent or good in prestige.
+
+### Required Code
+
+```{r}
+
+data("Duncan")
+
+panel.hist <- function(x, ...)
+{
+    usr <- par("usr")
+    par(usr = c(usr[1:2], 0, 1.5) )
+    h <- hist(x, plot = FALSE)
+    breaks <- h$breaks; nB <- length(breaks)
+    y <- h$counts; y <- y/max(y)
+    rect(breaks[-nB], 0, breaks[-1], y, col = "cyan", ...)
+}
+
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...)
+{
+    usr <- par("usr")
+    par(usr = c(0, 1, 0, 1))
+    r <- abs(cor(x, y))
+    txt <- format(c(r, 0.123456789), digits = digits)[1]
+    txt <- paste0(prefix, txt)
+    if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+    text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+
+
+```
+
+### 1.
+
+```{r}
+
+# pairs(data,
+#       lower.panel = panel.cor,
+#                  diag.panel = panel.hist,
+#                  upper.panel = panel.smooth)
+
+
+```
+
+### 2.
+
+### 3.
+
+### 4.
+
+##### Linearity
+
+```{r}
+# plot(lm2$residuals) 
+# abline(h=0,col="blue")  
+# 
+# plot(lm2,1)   
+```
+
+Overall, the linearity assumption seems to ... .
+
+##### Normality
+
+```{r}
+# plot(lm2,2)
+# # Q-Q plot
+# lm2.standard <- rstandard(lm2) #standardized residuals
+# 
+# # null hypothesis of normality
+# shapiro.test(lm2.standard)
+```
+
+Based on the Q-Q plot and the Shapiro--Wilk Test the normality assumption is ... .
+
+##### Homoscedasticity
+
+```{r}
+# library(car)
+# plot(lm2,3) #
+# ncvTest(lm2) #
+```
+
+The constant variance (homoscedasticity) assumption ... .
+
+##### Independence
+
+```{r}
+# lm2.standard <- rstandard(lm2) #standardized residuals
+# 
+# plot(lm2.standard)
+# abline(h=0,col="blue")
+# 
+# 
+# durbinWatsonTest(lm2) # Fail to reject null hypothesis of independence
+# 
+# vif(lm2) # Variance Inflation Factors
+```
+
+The independence assumption... .
+
+Overall, the model ... .
+
+## Illustrative Example 2
+
+```{r}
+library(ggplot2)
+set.seed(2020)
+
+X1 <- c(2,3,4,6,8,9,11,12,12,14)
+Y1 <- round(X1+rnorm(10),digits = 3)
+
+df1 <- data.frame(Y1 = c(Y1,25),
+                  X1 = c(X1,24.5),
+                  Y2 = c(Y1,3),
+                  X2 = c(X1,9.5),
+                  Y3 = c(Y1,3),
+                  X3 = c(X1,24.5))
+
+
+
+ggplot(data = df1, mapping = aes(y = Y1, x = X1))+
+         geom_point() +
+         geom_smooth(method = "lm",se=FALSE)+
+  labs(title = "Scatterplot of Data with Outlier 1")
+
+ggplot(data = df1, mapping = aes(y = Y2, x = X2))+
+         geom_point() +
+         geom_smooth(method = "lm",se=FALSE)+
+  labs(title = "Scatterplot of Data with Outlier 2")
+
+
+ggplot(data = df1, mapping = aes(y = Y3, x = X3))+
+         geom_point() +
+         geom_smooth(method = "lm",se=FALSE)+
+  labs(title = "Scatterplot of Data with Outlier 3")
+
+
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+# cooks.distance()
+
+
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+
+
+
+```
+
+## Example 5 from slides
+
+```{r}
+
+
+
+
+
+```

@@ -1,0 +1,76 @@
+---
+title: "ADSC2020 Introduction to Survival Analysis"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+```{r}
+
+library(survival)
+library(tidyverse)
+library(ggsurvfit)
+
+data(diabetic)
+
+# survfit2(Surv(time, status) ~ 1, data = diabetic) %>% 
+#   ggsurvfit() +
+#   labs(
+#     x = "Time",
+#     y = "Overall survival probability"
+#   )+ 
+#   add_confidence_interval()+
+#   add_risktable()
+
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+# model <- coxph(Surv(time, status) ~ variable.1 + ... +
+# variable.p, cluster = id, data=data)
+# summary(model)
+
+
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+ # survfit2(Surv(time, status) ~ trt, data = diabetic) %>% 
+ #   ggsurvfit() +
+ #   labs(
+ #     x = "Time",
+ #     y = "Overall survival probability"
+ #   )+ 
+ # add_confidence_interval()+
+ # add_risktable()
+
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+# test.ph <- cox.zph(model)
+# test.ph
+# 
+# ggcoxzph(test.ph)
+```
+
+## Exercise 1
+
+```{r}
+
+library(survival)
+data(cancer)
+
+
+```

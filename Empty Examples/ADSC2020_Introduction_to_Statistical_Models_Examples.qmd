@@ -1,0 +1,365 @@
+---
+title: "ADSC2020 Introduction to Statistical Models"
+author: "Sean Hellingman"
+format: html
+editor: visual
+---
+
+## Review Examples
+
+### A.
+
+t-tests
+
+```{r}
+
+
+#par( mfrow= c(3,2) )
+
+hist(rt(2000,5))
+hist(rt(2000,50))
+
+Ex1 <- rnorm(123,0,2) # Theoretical mean: 0
+Ex2 <- rexp(123,1) # Theoretical mean: 1
+Ex3 <- rchisq(123,10) # Theoretical expected value: 10
+
+
+#t.test(x, mu = $\mu_0$, alternative = "two.sided", conf.level = 0.95)
+
+
+
+
+
+```
+
+### B.
+
+Normality
+
+```{r}
+
+set.seed(123)
+
+Sample1 <- rnorm(1000,mean=1,sd=2)
+sample2 <- rchisq(1000,df=15)
+Sample3 <- rexp(1000,2)
+
+#Add histograms
+
+hist(Sample1)
+
+
+# Normally Distributed
+qqnorm(Sample1, pch = 1, frame = FALSE)
+qqline(Sample1, col = "steelblue", lwd = 2)
+
+# Not Normally Distributed
+qqnorm(sample2, pch = 1, frame = FALSE)
+qqline(sample2, col = "coral", lwd = 2)
+
+
+Samples <- data.frame(Sample1 = Sample1, Sample2 = sample2)
+
+ggplot(Samples, aes(sample = Sample1)) +
+  stat_qq() +
+  stat_qq_line()
+
+
+ggplot(Samples, aes(sample = Sample2)) +
+  stat_qq() +
+  stat_qq_line()
+
+
+### Tests ###
+# Null hypothesis is normality #
+
+# shapiro.test()
+
+
+
+
+
+
+```
+
+### C.
+
+Linear relationships
+
+```{r}
+
+
+set.seed(1000)
+library(MASS)
+library(ggplot2)
+data("Cars93")
+colnames(Cars93)
+# + geom_smooth(method='lm') #Add regression line to plot
+  
+
+## 1 ## 
+# Appears to be some weak linear relationship #
+ggplot(data=Cars93,mapping = aes(x = EngineSize, y = Price)) +
+  geom_point()+
+  labs(title = "#1: Scatterplot of Price by Engine Size",
+       x = "Engine Size in Litres",
+       y = "Average Price of the Car")
+
+## 2 ##
+# There appears to be a linear relationship #
+ggplot(data=Cars93,mapping = aes(x = Horsepower, y = Price)) +
+  geom_point()+
+  labs(title = "#2: Scatterplot of Price by Maximum Horsepower",
+       x = "Maximum Horsepower",
+       y = "Average Price of the Car")
+
+
+df1 <- data.frame(X = rnorm(50,1,1),
+                  Y = rnorm(50,-1,3))
+
+
+## 3 ##
+# There does not appear to be a linear relationship #
+ggplot(data=df1,mapping = aes(x = X, y = Y)) +
+  geom_point()+
+  labs(title = "#3: Scatterplot of Y by X",
+       x = "X",
+       y = "Y")
+
+
+X = rnorm(50,0,1)
+Y = -X
+
+df2 <- data.frame(X = X,
+                  Y = Y)
+## 4 ##
+# There appears to be a perfect (deterministic) linear relationship #
+ggplot(data=df2,mapping = aes(x = X, y = Y)) +
+  geom_point()+
+  labs(title = "#4: Scatterplot of Y by X",
+       x = "X",
+       y = "Y")
+
+
+df3 <-  data.frame(X = X,
+                  Y = X^2)
+
+## 5 ##
+# There appears to be a relationship, but it is not linear #
+ggplot(data=df3,mapping = aes(x = X, y = Y)) +
+  geom_point()+
+  labs(title = "#5: Scatterplot of Y by X",
+       x = "X",
+       y = "Y") 
+
+ #+ stat_smooth(method = "lm", formula = y~poly(x,2),se=F)
+
+
+
+```
+
+### 
+
+```{r}
+
+
+## 1 ##
+# EngineSize,  Price
+# Moderate positive correlation
+cor(Cars93$EngineSize,Cars93$Price)
+
+## 2 ##
+#Price by Maximum Horsepower
+# Moderate to strong positive correlation
+cor(Cars93$Horsepower,Cars93$Price)
+
+## 3 ##
+# Weak negative correlation
+cor(df1)
+
+## 4 ##
+# Perfect (strong) negative correlation
+cor(df2)
+
+## 5 ##
+# Weak negative correlation
+cor(df3)
+
+```
+
+## Example 1 from slides
+
+### Example data:
+
+```{r}
+
+set.seed(2020)
+
+library(ggplot2)
+
+
+df1 <- data.frame(X = rnorm(50,1,1),
+                  Y = rnorm(50,-1,3))
+
+
+## 1 ##
+ggplot(data=df1,mapping = aes(x = X, y = Y)) +
+  geom_point()+
+  labs(title = "#1: Scatterplot of Y by X",
+       x = "X",
+       y = "Y")+ 
+  geom_smooth(method='lm') #Add regression line to plot
+
+
+X = rnorm(50,5,1)
+Y = -X
+
+df2 <- data.frame(X = X,
+                  Y = Y)
+## 2 ##
+ggplot(data=df2,mapping = aes(x = X, y = Y)) +
+  geom_point()+
+  labs(title = "#2: Scatterplot of Y by X",
+       x = "X",
+       y = "Y")+ 
+  geom_smooth(method='lm') #Add regression line to plot
+
+unif <- runif(50)
+
+df3 <- data.frame(X = X-5,
+                  Y = (X-5)^2+unif)
+
+## 3 ##
+ggplot(data=df3,mapping = aes(x = X, y = Y)) +
+  geom_point()+
+  labs(title = "#3: Scatterplot of Y by X",
+       x = "X",
+       y = "Y")+ 
+  geom_smooth(method='lm') #Add regression line to plot
+
+
+nor <- rnorm(50,0,1)
+
+df4 <- data.frame(X = X,
+                  Y = X + 1 + nor)
+
+
+## 4 ##
+ggplot(data=df4,mapping = aes(x = X, y = Y)) +
+  geom_point()+
+  labs(title = "#4: Scatterplot of Y by X",
+       x = "X",
+       y = "Y")+ 
+  geom_smooth(method='lm') #Add regression line to plot
+
+# stat_smooth(method='lm', formula = y~poly(x,2))
+```
+
+### Models:
+
+```{r}
+
+
+```
+
+## Example 2 from slides
+
+```{r}
+panel.hist <- function(x, ...)
+{
+    usr <- par("usr")
+    par(usr = c(usr[1:2], 0, 1.5) )
+    h <- hist(x, plot = FALSE)
+    breaks <- h$breaks; nB <- length(breaks)
+    y <- h$counts; y <- y/max(y)
+    rect(breaks[-nB], 0, breaks[-1], y, col = "cyan", ...)
+}
+
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...)
+{
+    usr <- par("usr")
+    par(usr = c(0, 1, 0, 1))
+    r <- abs(cor(x, y))
+    txt <- format(c(r, 0.123456789), digits = digits)[1]
+    txt <- paste0(prefix, txt)
+    if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+    text(0.5, 0.5, txt, cex = cex.cor * r)
+}
+
+
+```
+
+### Example data:
+
+```{r}
+set.seed(2020)
+
+X1 <- rnorm(100,10,1)
+X2 <- rnorm(100,5,2)
+X3 <- rnorm(100,0,5)
+
+Y <- 30*X1 + 50*X2 + 2*(X3^2) + rnorm(100,0,2)
+
+df5 <- data.frame(Y = Y,
+                  X1 = X1,
+                  X2 = X2,
+                  X3 = X3)
+
+#3 With LOWESS curve, correlations, and histograms
+pairs(df5,
+      lower.panel = panel.cor,
+                 diag.panel = panel.hist,
+                 upper.panel = panel.smooth)
+
+```
+
+### Models:
+
+```{r}
+
+```
+
+## Example 3 from slides
+
+### Example Data:
+
+```{r}
+set.seed(2020)
+
+X1 <- rnorm(100,10,1)
+X2 <- rnorm(100,5,2)
+X3 <- rnorm(100,0,5)
+X4 <- runif(100,0,5)
+X5 <- rnorm(100,10,10)
+
+Y <- 30*X1 + 50*X2 + 5*(X3^2) + 20*X1*X4 + rnorm(100,0,2)
+
+df6 <- data.frame(Y = Y,
+                  X1 = X1,
+                  X2 = X2,
+                  X3 = X3,
+                  X4 = X4,
+                  X5 = X5)
+
+#3 With LOWESS curve, correlations, and histograms
+pairs(df6,
+      lower.panel = panel.cor,
+                 diag.panel = panel.hist,
+                 upper.panel = panel.smooth)
+```
+
+### Models:
+
+```{r}
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+# Y <- 30*X1 + 50*X2 + 5*(X3^2) + 20*X1*X4 + rnorm(100,0,2)
+
+
+
+```

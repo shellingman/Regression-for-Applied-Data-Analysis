@@ -1,0 +1,247 @@
+---
+title: "ADSC2020 Models for Count Data I and II Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+# Part I
+
+## Example 1 from slides
+
+G: Goals\
+S: Shots\
+Age: Age in years\
+Pos: Playing position
+
+```{r}
+
+NHL <- read.table("NHL.txt", header = TRUE, sep = ',')
+
+# PoiModel <- glm(count.response ~ Var.1 + Var.2 +
+# Var.j, family = poisson(link="log"), data = data)
+
+
+```
+
+In general, the coefficients express how a one unit change in the explanatory variable changes the log of the expected count (response variable).\
+**You will need to be able to explain what the coefficient values mean.**
+
+-   *With a one year increase in age...*
+
+-   *Compared to the reference category of centre...*
+
+## Example 2 from slides
+
+TOI: Time on Ice in minutes
+
+```{r}
+
+
+# NHL$LogTOI <- log(NHL$TOI)
+
+# PoiModel <- glm(count.response ~ Var.1 + Var.2 + Var.j, family = poisson(link="log"), data = data, offset = log(unit.size))
+
+
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(car)
+
+# Model values #
+counts <- predict(POM2, type = "response")
+
+# # Numeric variables #
+# mydata <- NHL %>%
+# dplyr::select(G, S, Age, Pos) %>%
+# dplyr::select_if(is.numeric)
+# predictors <- colnames(mydata)
+# 
+# # transformed relationship #
+# mydata <- mydata %>%
+# mutate(lncount = log(counts)) %>%
+# gather(key = "predictors", value = "predictor.value",-lncount)
+# 
+# # generate the plots #
+# 
+# ggplot(mydata, mapping =  aes(lncount, predictor.value))+
+# geom_point(size = 0.5, alpha = 0.5) +
+# geom_smooth(method = "loess") +
+# theme_bw() +
+# facet_wrap(~predictors, scales = "free_y")
+
+
+vif(POM2) #No problems
+
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+
+# plot(,5)
+# plot(,4)
+
+# cooks.distance()
+
+
+```
+
+## Example 5 from slides
+
+```{r}
+
+library(AER)
+
+#Cameron & Trivedi (1990) Dispersion test
+# dispersiontest(,trafo=1) #trafo = transformation function - linear specification
+# dispersiontest(,trafo=2) #trafo = transformation function - quadratic specification
+
+
+```
+
+## Example 6 from slides
+
+```{r}
+
+library(MASS)
+
+
+# QPoiModel <- glm(count.response ~ Var.1 + Var.2 + ... +
+# Var.j, family = quasipoisson, data = data, offset =
+# log(unit.size))
+# 
+# summary(QPoiModel)
+
+
+
+# NBModel <- glm.nb(count.response ~ Var.1 + Var.2 + ...
+# + Var.j + offset(log(unit.size)), link = "log", data = data)
+# 
+# summary(NBModel)
+
+
+
+```
+
+# Part II
+
+## Example 1 from slides
+
+BLK: Blocked shots\
+HIT: Hits
+
+```{r}
+
+library("lmtest")
+library(MASS)
+
+
+# lrtest(M1,M2)
+
+
+library(MASS)
+
+
+# POMA <- glm(G ~ S + Age + Pos, family = poisson, 
+#             data = NHL, offset = log(TOI))
+# 
+# 
+# 
+# NBA <- glm.nb(G ~ S + Age + Pos + offset(log(TOI)), link = "log", 
+#             data = NHL )
+
+
+
+
+## Comparing Models ##
+
+
+# lrtest() 
+
+
+
+
+
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+# AIC() 
+# 
+# 
+# BIC() 
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+
+set.seed(2020)
+library(boot)
+library(caret)
+
+# CV.Model <- cv.glm(data, CountModel, K = folds)
+# CV.Model$delta
+# sqrt(CV.Model$delta)
+
+## Estimate the QP models ##
+
+
+
+## Poisson models ##
+
+
+
+## Quasipoisson models ##
+
+
+
+
+## NB models ##
+
+
+
+
+## Response units ##
+
+
+
+```
+
+## Example 4 from slides
+
+GW: Game-Winning Goals
+
+```{r}
+
+library(pscl)
+
+hist(NHL$G)
+hist(NHL$GW)
+table(NHL$GW) # Zero-inflated
+
+
+
+# HurdleModel <- hurdle(count.response ~ Var.1 + Var.2 +
+# ... + Var.j, data = data, dist = "negbin", offset = log(unit.size))
+# 
+# summary(HurdleModel)
+
+```
+
+The interpretations are the same for the logistic portion and the negative binomial portion respectively. These models are estimated separately and the logistic regression model is right censored and the negative binomial model is truncated.

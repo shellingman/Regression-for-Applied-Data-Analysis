@@ -1,0 +1,169 @@
+---
+title: "ADSC2020 ARIMA Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+```{r}
+
+set.seed(2020)
+
+# ARMA1 <- arima.sim(n = 4222, list(order = c(1,0,1), ar = 0.7, ma = -0.4))
+# ARMA2 <- arima.sim(n = 322, list(order = c(2,0,2), ar = c(0.7,-0.3), ma = c(-0.4,0.4)))
+# 
+# model <- Arima(data,order = c(p,d,q))
+# 
+# f1 <- forecast(model,100)
+# autoplot(forecast(model,100))
+```
+
+## Example 2 from slides
+
+```{r}
+
+
+# TrainPassengers <- read.csv("Germany_Rail.csv")
+# TrainPassengers <- TrainPassengers[-65,]
+# Trains <- ts(TrainPassengers$Passengers, frequency = 4, start = c(2004, 1))
+# 
+# 
+# SARIMA5.1 <- Arima(Trains,order=c(3,1,3),
+# seasonal=list(order=c(1,1,1), period=4))
+# 
+# 
+# autoplot(forecast())
+```
+
+## Expanding Windows
+
+```{r}
+
+library(tsibble)
+library(dplyr)
+library(DescTools)
+
+
+Tourists <- read.csv("Germany_Tourists.csv")
+Tourists$Time <- as.Date(paste(Tourists$Time, "-01", sep=""))
+
+
+TouristsTS <- as_tsibble(Tourists, index = Time, key = Country)
+  
+Tourists_Expand <- TouristsTS  %>% 
+  stretch_tsibble(.init = 50, .step = 1) # Identify windows
+
+
+results <- tibble(window = integer(), forecast = numeric(), actual = numeric())
+
+
+for(i in 2:max(Tourists_Expand$.id)-1){
+  
+  train <- Tourists_Expand %>% 
+    filter(.id == i) %>% 
+    dplyr::select(Tourists)
+
+  train <- ts(train$Tourists,frequency = 12)
+  
+  test <- Tourists_Expand %>% 
+    filter(.id == i+1) 
+  
+  test <- slice_tail(test, n=1) # Change if different lengths (h=1)
+  
+
+  
+  model <- Arima(train,order = c(1,1,1)) # Change the models
+  
+  forec <- forecast(model,h=1)
+  
+  
+      new_results <- tibble( # Save results
+      window = i,
+      forecast = as.numeric(forec$mean),
+      actual = test$Tourists,
+    )
+
+    results <- bind_rows(results, new_results)
+  
+  
+}
+
+MSE(results$actual,results$forecast)
+
+
+```
+
+## Rolling Windows
+
+```{r}
+
+library(tsibble)
+library(dplyr)
+
+# One Step #
+
+
+Tourists <- read.csv("Germany_Tourists.csv")
+Tourists$Time <- as.Date(paste(Tourists$Time, "-01", sep=""))
+
+RWresults <- tibble(window = integer(), forecast = numeric(), actual = numeric())
+
+# Window length = 50
+
+for(i in 1:(nrow(Tourists)-50)){ # Window cannot roll into future (will need to change)
+  
+  train <- Tourists[(i:(i+49)),]
+    
+
+  train <- ts(train$Tourists,frequency = 12)
+  
+  test <- Tourists[i+50,3] # Change # h = 1
+
+
+  
+  model <- Arima(train,order = c(1,1,1)) # Will need to change
+  
+  forec <- forecast(model,h=1)
+  
+  
+      new_results <- tibble( # Save results
+      window = i,
+      forecast = as.numeric(forec$mean),
+      actual = test,
+    )
+
+    resultsRW <- bind_rows(results, new_results)
+  
+  
+}
+
+MSE(resultsRW$actual,resultsRW$forecast)
+
+
+
+```
+
+## Example 3 from slides
+
+```{r, warning=FALSE, message=FALSE}
+
+library(TSA)
+library(tseries)
+
+
+Tourists <- read.csv("Germany_Tourists.csv")
+Tourists <- ts(Tourists$Tourists, frequency = 12, start = c(1990, 1))
+
+# plot(Tourists, type = "o")
+# 
+# acf(Tourists)
+# pacf(Tourists)
+# 
+# adf.test(Tourists)
+# kpss.test(Tourists)
+# 
+# m4 <- auto.arima(Tourists)
+# autoplot(forecast(m4,h=12))
+```

@@ -1,0 +1,245 @@
+---
+title: "ADSC2020 Model Formulas and Coefficients Examples"
+author: "Sean Hellingman"
+format: html
+editor: visual
+---
+
+## Example 1 from slides
+
+### Data:
+
+```{r}
+
+set.seed(2020)
+
+Study_Hours <- round(rnorm(323,7,2),digits = 1)
+Entry_Exam <- round(rnorm(323,70,8),digits=1)
+P <- c("BC","Alberta","Other")
+Province <- sample(P,323,replace = TRUE)
+Science_Score <- round(0.2*Study_Hours + 
+                         0.12*Entry_Exam + 
+                         (0.8*Study_Hours*0.1*Entry_Exam) +
+                         as.numeric(Province == "BC")*6 +
+                         as.numeric(Province == "Alberta")*2 +
+                         rnorm(323,0,10),digits = 1)
+
+
+Scores <- data.frame(Study_Hours = Study_Hours,
+                     Entry_Exam = Entry_Exam,
+                     Province = Province,
+                     Science_Score = ifelse(Science_Score > 100, 99.9,
+                                            Science_Score))
+
+rm(P,Study_Hours,Entry_Exam,Province)
+```
+
+### Model:
+
+```{r}
+
+#lm1$coefficients
+
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+library(dplyr)
+
+# Scores.1 <- Scores %>%
+#   sample_n(10, replace = FALSE)
+
+
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+
+
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+
+```
+
+## Example 5 from slides
+
+```{r}
+
+lm6 <- lm(formula = Science_Score ~ Study_Hours + Entry_Exam + Study_Hours:Entry_Exam + Province, data = Scores)
+
+summary(lm6)
+```
+
+# Explanatory Example
+
+```{r}
+
+Wages <- read.csv("Wages.csv")
+
+
+```
+
+### 1.
+
+An empty model only containing the intercept represents the intercept of all cases. This is sometimes called the *grand mean*.
+
+```{r}
+
+# y ~ 1
+
+
+
+```
+
+### 2.
+
+When including categorical variables, there is a separate model value for each group. The model values are essentially the group-wise means. Each of the other coefficients is the *difference* between its group's mean and the mean of the reference group. The estimated intercept is the mean of the reference category.
+
+```{r}
+
+
+
+
+```
+
+### 3.
+
+We can use -1 to suppress the intercept in our model to obtain the averages (intercepts) for each group. This is not recommended in practice (explanation to come later).
+
+```{r}
+
+
+
+```
+
+### 4.
+
+By including a single numeric explanatory variable we are essentially estimating a single straight line.
+
+```{r}
+
+
+
+```
+
+### 5.
+
+By adding a categorical variable to our straight line model we are now estimating a straight line for each group of the categorical variable. The lines are only different in their intercepts, all of the lines have the same slope.
+
+*Note: The order of the model terms does not make any difference.*
+
+```{r}
+
+
+
+```
+
+### 6.
+
+By including an interaction term between the categorical variable and numeric variable, we still have a straight-line model, but now each of the different groups may have their own slope.
+
+*Recall: The interaction term tells how the effect of the numeric variable is modulated by the different levels of the categorical variable.*
+
+```{r}
+
+library(ggplot2)
+
+ggplot(data = Wages, mapping = aes(y = Salary, x = Experience, color = Province))+
+         geom_point() +
+         geom_smooth(method = "lm")+
+  labs(title = "Effect of Second Independent Variable and Interaction")
+
+
+```
+
+We interpret the slopes for each of the individual groups.
+
+```{r}
+
+
+
+
+```
+
+## Example 6 from slides
+
+```{r}
+
+
+
+```
+
+Careful!
+
+## Example 7 from slides
+
+```{r}
+
+
+lmALL <- lm(formula = Salary ~ ., data = Wages)
+summary(lmALL)
+
+```
+
+## Example 8 from slides
+
+### Data:
+
+```{r}
+
+set.seed(2)
+
+X1 <- rnorm(210,2,1)
+L <- c("Kamloops","Kelowna","Vernon","Merritt")
+Location <- sample(L,210,replace = TRUE)
+
+Y <- X1 + 4*as.numeric(Location == "Kamloops")*X1 + (-1)*as.numeric(Location == "Kelowna")*X1 + 2*as.numeric(Location == "Vernon")*X1 + (-3)*as.numeric(Location == "Merritt")*X1 + rnorm(210,0,2) 
+
+
+Data <- data.frame(Y = Y,
+                   Location = Location,
+                   X1 = X1)
+
+
+
+```
+
+### Results:
+
+```{r}
+
+library(ggplot2)
+
+ggplot(data = Data, mapping = aes(y = Y, x = X1))+
+         geom_point() +
+         geom_smooth(method = "lm")+
+  labs(title = "Scatterplot of Example Data without Location")
+
+
+
+ggplot(data = Data, mapping = aes(y = Y, x = X1))+
+         geom_point() +
+         geom_smooth()+
+  labs(title = "Scatterplot of Example Data without Location Non-Linear")
+
+
+
+
+# ggplot(data = Data, mapping = aes(y = Y, x = X1, color = Location))+
+#          geom_point() +
+#          geom_smooth(method = "lm")+
+#   labs(title = "Effect of Second Independent Variable and Interaction")
+
+
+```

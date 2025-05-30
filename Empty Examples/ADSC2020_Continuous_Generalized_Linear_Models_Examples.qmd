@@ -1,0 +1,117 @@
+---
+title: "ADSC2020 Continuous Generalized Linear Models Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+```{r}
+library(MASS)
+
+hist(Cars93$Max.Price)
+
+# GammaModel <- glm(response ~ Var.1 + Var.2 + ... +
+# Var.j, family = gamma(link="inverse"), data = data)
+# 
+# summary(GammaModel)
+
+
+
+```
+
+Inverse Link (GAMMA1):
+
+Log Link (GAMMA2):
+
+## Example 2 from slides
+
+```{r}
+
+
+
+# IGModel <- glm(response ~ Var.1 + Var.2 + ... + Var.j,
+# family = inverse.gaussian(link = "1/mu∧2"), data = data)
+# 
+# summary(IGModel)
+
+# IG1 <- glm(Max.Price ~ MPG.highway + Horsepower + DriveTrain, family = inverse.gaussian(link = "1/mu^2"), data = Cars93, start = c(0.5,0.5,0.5,0.5,0.5))
+# summary(IG1)
+# 
+# hist(1/(Cars93$Max.Price)^2)
+
+
+
+# library(car)
+# vif(IG2)
+
+```
+
+"1/mu\^2" Link (IG1):
+
+Log Link (IG2):
+
+## Example 3 from slides
+
+```{r}
+
+library("lmtest")
+
+
+# lrtest() 
+# 
+# AIC()
+# BIC() 
+```
+
+## Example 4 from slides
+
+```{r}
+
+set.seed(2020)
+
+library(boot)
+data(Cars93)
+
+
+# CV.GAMMA1 <- cv.glm(Cars93, GAMMA1, K = 5) 
+# CV.GAMMA1$delta
+# sqrt()
+
+
+```
+
+```{r}
+
+
+set.seed(2020)
+
+# library(caret)
+# 
+# train_model <- trainControl(method = "cv", number = 5)
+# 
+# # Train the model
+# modelA <- train(
+#   Max.Price ~ MPG.highway + Horsepower + DriveTrain, 
+#   data = Cars93, 
+#   method = "glm",
+#   family = "Gamma",
+#   trControl = train_model)
+# print(modelA)
+# 
+# 
+# modelB <- train(
+#   Max.Price ~ MPG.highway + Horsepower + DriveTrain, 
+#   data = Cars93, 
+#   method = "glm",
+#   family = "inverse.gaussian",
+#   trControl = train_model,
+#   start = c(0.5,0.5,0.5,0.5,0.5))
+# print(modelB)
+
+
+
+
+
+```

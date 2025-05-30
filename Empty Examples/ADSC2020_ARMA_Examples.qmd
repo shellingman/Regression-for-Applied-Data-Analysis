@@ -1,0 +1,92 @@
+---
+title: "ADSC2020 ARMA Examples"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+```{r, warning=FALSE}
+
+# library(TSA)
+# 
+# load("Ex1A.RData")
+# load("Ex1B.RData")
+```
+
+## Example 2 from slides
+
+```{r}
+
+library(lmtest)
+
+# ARMA <- arima(ts,order = c(p,d,q))
+# 
+# coeftest(ARMA)
+```
+
+## Example 3 from slides
+
+load("Ex3A.RData")
+
+```{r}
+
+# load("Ex3A.RData")
+# load("Ex3B.RData")
+
+```
+
+## Example 4 from slides
+
+```{r}
+
+# ARMA <- arima(ts,order = c(p,d,q))
+# 
+# coeftest(ARMA)
+
+```
+
+## Example 5 from slides
+
+```{r}
+
+# load("Ex5A.RData")
+# load("Ex5B.RData")
+
+
+
+```
+
+## Example 6 from slides
+
+```{r}
+
+# ARMA <- arima(ts,order = c(p,d,q))
+# 
+# coeftest(ARMA)
+
+```
+
+## Example 7 from slides
+
+```{r}
+
+library(forecast)
+
+# model <- auto.arima(data)
+# coeftest(model)
+```
+
+## Example 8 from slides
+
+```{r}
+
+library(tseries)
+
+# adf.test(data)
+# kpss.test(data)
+
+```
+
+### 

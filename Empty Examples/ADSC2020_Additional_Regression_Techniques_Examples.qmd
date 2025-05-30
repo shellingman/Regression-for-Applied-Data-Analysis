@@ -1,0 +1,87 @@
+---
+title: "ADSC2020 Additional Regression Techniques"
+author: "Sean Hellingman"
+format: pdf
+editor: visual
+---
+
+## Example 1 from slides
+
+```{r}
+library(lme4)
+library(tidyverse)
+
+
+MLS <- read.csv("MLSData.csv")
+
+ # LMM:
+model2 <- lmer(GP ~ RoundFAC + Position + (1+PPG|Conference),
+ data = MLS)
+summary(model2)
+
+
+# # LMM:
+# model <- lmer(Response ~ fixed.variable.1 + ... +
+# fixed.variable.p + (1+random.slope|random.intercept),
+# data = dataset)
+# 
+# 
+# # GLMM:
+# model <- glmer(Response ~ fixed.variable.1 + ... +
+# fixed.variable.p + (1+random.slope|random.intercept),
+# family = distribution, data = dataset)
+
+
+
+```
+
+## Example 2 from slides
+
+```{r}
+
+library(sjPlot)
+
+## Random Effects ##
+
+plot_model(model2, type = "re")
+
+
+## Histograms ##
+
+
+est.eff1 = coef(model2)$Conference
+intercept.fix1 = fixef(model2)["(Intercept)"]
+
+hist(est.eff1$`(Intercept)`, main = "Histogram of Random Intercepts", xlab = "Intercepts")
+hist(est.eff1$PPG, main = "Histogram of Random PPG Random Slopes", xlab = "PPG")
+
+
+shapiro.test(est.eff1$`(Intercept)`)
+shapiro.test(est.eff1$PPG)
+
+```
+
+## Example 3 from slides
+
+```{r}
+
+data <- read.csv("Simulated.csv")
+
+m <- loess(y~x1,data = data)
+summary(m)
+
+
+pred <- predict(m)
+
+
+
+# model <- loess(response ~ variable.1 + ... variable.k,
+# data = dataset, span = δ)
+
+# plot(data$x1,data$y,type = 'l', main = "LOESS Regression Estimates",ylab = "Y",
+#      xlab = "X1")
+# lines(pred, x = data$x1, col = "red")
+
+```
+
+## 
