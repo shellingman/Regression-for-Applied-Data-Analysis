@@ -34,10 +34,10 @@ Upon completion of the course the students will be expected to:
 4. Model selection
 5. Predictions with statistical models
 6. Generalized linear models
+    - Binary logistic regression
+    - Models for count data
+    - Continuous generalized linear models
 7. Regularization methods
-  - Binary logistic regression
-  - Models for count data
-  - Continuous generalized linear models
 8. Smoothers
 9. (S)ARIMA models
 
